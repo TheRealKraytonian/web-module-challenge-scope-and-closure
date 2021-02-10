@@ -2,24 +2,27 @@
 
 /**Example Task : processFirstItem()
  * This example shows how you might go about solving the rest of the tasks
- * 
+ *
  * Use the higher order function processFirstItem below to do the following:
  *  1. Receive an array of strings in a parameter
  *  2. Receive a callback function that takes a string as its argument in a parameter
- *  3. Return the result of invoking the callback function and passing in the FIRST 
+ *  3. Return the result of invoking the callback function and passing in the FIRST
  *     element in the array as the argument
- * 
+ *
  * The following code is demonstrating a way of completing this task
  * It returns the string `foofoo`
-*/
+ */
 
 function processFirstItem(stringList, callback) {
-  return callback(stringList[0])
+  return callback(stringList[0]);
 }
-console.log(processFirstItem(['foo','bar'],function(str){return str+str}));
+console.log(
+  processFirstItem(["foo", "bar"], function (str) {
+    return str + str;
+  })
+);
 
 // ⭐️ Example Challenge END ⭐️
-
 
 ///// M V P ///////
 
@@ -28,19 +31,20 @@ console.log(processFirstItem(['foo','bar'],function(str){return str+str}));
   Study the code for counter1 and counter2, then answer the questions below.
   
   1. What is the difference between counter1 and counter2?
-  
+  counter 1 starts as a variable defined as a function. counter two is a function.
   2. Which of the two uses a closure? How can you tell?
-  
+  counter 1 uses a closure because its the only function that has a child function process of elimination
   3. In what scenario would the counter1 code be preferable? In what scenario would 
-     counter2 be better?  
+     counter2 be better?  in terms of scoping use counter one when you only want to scope the child function in the parent function meaning you can only access the child inside the parent, conter two you want the function to be accessable global
+    
 */
 
 // counter1 code
 function counterMaker() {
   let count = 0;
   return function counter() {
-   return count++;
-  }
+    return count++;
+  };
 }
 
 const counter1 = counterMaker();
@@ -52,7 +56,6 @@ function counter2() {
   return count++;
 }
 
-
 /* ⚾️⚾️⚾️ Task 2: inning() ⚾️⚾️⚾️
 Use the inning function below to do the following:
   1. Return a random whole number of points between 0 and 2 scored by one team in an inning
@@ -62,10 +65,11 @@ Use the inning function below to do the following:
 NOTE: This will be a callback function for the tasks below
 */
 
-function inning(/*Code Here*/){
-    /*Code Here*/
+let currentScore = 0;
+function inning() {
+  /*Code Here*/
+  return Math.floor(Math.random() * 5);
 }
-
 
 /* ⚾️⚾️⚾️ Task 3: finalScore() ⚾️⚾️⚾️
 Use the finalScore function below to do the following:
@@ -75,25 +79,36 @@ Use the finalScore function below to do the following:
   4. After the last inning, return an object containing the final (total) score of the innings played
   
   For example: invoking finalScore(inning, 9) might return this object:
-{
+{S
   "Home": 11,
   "Away": 5
 }
-*/ 
-
-function finalScore(/*code Here*/){
+*/
+function finalScore(fun, plates) {
   /*Code Here*/
+  for (let i = 0; i < plates; i++) {
+    currentScore += fun();
+  }
+  return {
+    Home: currentScore,
+    Away: currentScore,
+  };
 }
+finalScore(inning, 9);
 
 /* ⚾️⚾️⚾️ Task 4: getInningScore() ⚾️⚾️⚾️
 Use the getInningScore() function below to do the following:
   1. Receive a callback function - you will pass in the inning function from task 2 as your argument 
   2. Return an object with a score for home and a score for away that populates from invoking the inning callback function */
 
-function getInningScore(/*Your Code Here */) {
+function getInningScore(fun) {
   /*Your Code Here */
+  return {
+    home: fun(),
+    away: fun(),
+  };
 }
-
+console.log(getInningScore(inning));
 
 /* ⚾️⚾️⚾️ Task 5: scoreboard() ⚾️⚾️⚾️
 Use the scoreboard function below to do the following:
@@ -135,20 +150,42 @@ Use the scoreboard function below to do the following:
   "This game will require extra innings: Away 10 - Home 10"
 ]  
   */
-
-function scoreboard(/* CODE HERE */) {
+function scoreboard(fun1, fun2, plates) {
   /* CODE HERE */
-}
+  const arrayInningsAway = [];
+  const arrayInningsHome = [];
+  for (let i = 0; i < plates; i++) {
+    const inningFunc = fun1(fun2);
+    console.log(
+      `Inning ${i + 1}: Away ${inningFunc.away} - Home ${inningFunc.home}`
+    );
+    arrayInningsAway.push([inningFunc.away]);
+    arrayInningsHome.push([inningFunc.home]);
+  }
+  // after for loop is done reduce scores using .reduce()
+  const sumAway = arrayInningsAway.reduce((accumulator, currentValue) => {
+    return accumulator + currentValue;
+  }, 0);
+  console.log(sumAway);
 
+  const sumHome = arrayInningsHome.reduce((accumulator, currentValue) => {
+    return accumulator + currentValue;
+  }, 0);
+  if (sumHome = sumAway){
+    return `This game will require extra innings: Away ${sumAway} - Home ${sumHome}`;
+  } else {
+    return `Final Score: Away ${sumAway} - Home ${sumHome}`;
+  }
 
+scoreboard(getInningScore, inning, 9);
 
 
 /* 🛑🛑🛑🛑🛑 Please do not modify anything below this line 🛑🛑🛑🛑🛑 */
-function foo(){
+function foo() {
   //console.log('its working');
-  return 'bar';
+  return "bar";
 }
-export default{
+module.exports = {
   foo,
   processFirstItem,
   counter1,
@@ -157,4 +194,4 @@ export default{
   finalScore,
   getInningScore,
   scoreboard,
-}
+};
